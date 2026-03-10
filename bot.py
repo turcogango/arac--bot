@@ -1,15 +1,20 @@
+import os
 import ssl
 import aiohttp
 import json
 from datetime import datetime, timedelta
-import os
+import asyncio
 from telegram import Update
-from telegram.ext import ApplicationBuilder, CommandHandler, ContextTypes, MessageHandler, filters
+from telegram.ext import ContextTypes, ApplicationBuilder, CommandHandler
 
-# ==============================
-# PANEL BİLGİLERİ (RAILWAY için)
-# ==============================
-# Ortam değişkenlerinden okunuyor
+# USERS ve DEVRİ hazır
+with open("users.json", "r", encoding="utf-8") as f:
+    USERS = json.load(f)
+
+with open("devir.json", "r", encoding="utf-8") as f:
+    DEVIRS = json.load(f)
+
+# Paneller
 PANELS = {
     "panel1": {
         "url": os.environ.get("PANEL1_URL"),
@@ -23,25 +28,32 @@ PANELS = {
     }
 }
 
-# ==============================
-# USERS JSON DOSYASINI YÜKLE
-# ==============================
-with open("users.json", "r", encoding="utf-8") as f:
-    USERS = json.load(f)
+# GRUPLAR - TEK OLANLAR artık kendi grubunda
+GRUPLAR = {
+    "MALEFİZ": ["SKY02","SKY03","SKY06","SKY07","SKY11","SKY12","SKY13","SKY14","SKY16","SKY17",
+                "SKY21","SKY22","SKY23","SKY24","SKY25","SKY29","SKY30","SKY37","SKY46","SKY47",
+                "SKY48","SKY49","SKY58"],
+    "RASPUTİN": ["SKY04","SKY20","SKY39","SKY42","SKY51","SKY53","SKY65","SKY66","SKY67","SKY69",
+                 "SKY70","SKY72","SKY73"],
+    "EFE": ["SKY09","SKY15","SKY19","SKY27","SKY31","SKY38","SKY50","SKY56","SKY57","SKY59","SKY61","SKY62"],
+    "BOSSMAN": ["SKY08","SKY10","SKY40","SKY63","SKY64"],
+    "ALFİE": ["SKY18","SKY33","SKY54"],
+    "KURTBEY": ["SKY32","SKY36"],
+    "SARRAF": ["SKY28","SKY44"],
+    "HEKİM": ["SKY55","SKY60"],
+    "CAVİT": ["SKY43","SKY08","SKY10"],
+    "FAST": ["SKY05"],
+    "TOM SHELBY": ["SKY26"],
+    "GOOGLE": ["SKY52"],
+    "F BEY": ["SKY68"],
+    "FAVELA": ["SKY74"],
+    "DAYI": ["SKY75"],
+    "KAPALI": ["SKY35","SKY41"],
+    "BELİER": ["SKY45"],
+    "MEHMET": ["SKY71"]
+}
 
-# ==============================
-# DEVRİRES DOSYASINDAN OKUMA
-# ==============================
-def load_devirs():
-    try:
-        with open("devir.json", "r", encoding="utf-8") as f:
-            return json.load(f)
-    except Exception:
-        return {}
-
-# ==============================
-# PANELDEN YATIRIM, ÇEKİM & TESLİMAT ÇEK
-# ==============================
+# Panelden veri çekme
 async def fetch_user_amount(panel_config, user_uuid):
     ssl_ctx = ssl.create_default_context()
     ssl_ctx.check_hostname = False
@@ -87,76 +99,35 @@ async def fetch_user_amount(panel_config, user_uuid):
         net = deposit_total - withdraw_total - delivery_total
         return net
 
-# ==============================
-# /kasaXX KOMUTU (sadece yöneticiler)
-# ==============================
-async def kasa(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    msg = await update.message.reply_text("⏳ Kasa verileri alınıyor...")
-    try:
-        # Sadece yönetici kontrolü
-        member = await update.effective_chat.get_member(update.effective_user.id)
-        if member.status not in ["administrator", "creator"]:
-            await msg.edit_text("❌ Bu komutu sadece grup yöneticileri kullanabilir.")
-            return
+# /aracı komutu
+async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    for grup, skylar in GRUPLAR.items():
+        mesaj = f"📌 {grup} ({len(skylar)})\n"
+        for s in skylar:
+            key = s.replace(" ", "")
+            if key not in USERS:
+                mesaj += f" • {s} - ❌ Kullanıcı bulunamadı\n"
+                continue
+            info = USERS[key]
+            try:
+                net = await fetch_user_amount(PANELS[info["panel"]], info["uuid"])
+                devir = float(DEVIRS.get(key, 0))
+                total = net + devir
+                total_str = f"{int(total):,}".replace(",", ".") + " TL"
+                mesaj += f" • {s} - {total_str}\n"
+            except Exception as e:
+                mesaj += f" • {s} - ❌ Hata: {e}\n"
+        await update.message.reply_text(mesaj)
+        await asyncio.sleep(0.5)  # Telegram flood önleme
 
-        # Hangi kasa komutu çalıştıysa onu yakala
-        command = update.message.text.lstrip("/").upper()  # Örn: KASA02
-        username = command.replace("KASA", "SKY")           # Örn: SKY02
-
-        if username not in USERS:
-            await msg.edit_text("❌ Bu kullanıcı için veri bulunamadı.")
-            return
-
-        info = USERS[username]
-        panel = info["panel"]
-        uuid = info["uuid"]
-
-        net = await fetch_user_amount(PANELS[panel], uuid)
-        devirs = load_devirs()
-        devir = float(devirs.get(username, 0))
-        total = net + devir
-        total_str = f"{int(total):,}".replace(",", ".") + " TL"
-
-        await msg.edit_text(f"💰 {username} KASA: {total_str}")
-
-    except Exception as e:
-        await msg.edit_text(f"❌ Hata oluştu:\n{e}")
-
-# ==============================
-# /gunceladres
-# ==============================
-async def gunceladres(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("TSjQYavgJBGPr8iV3zH7qo1bx927qKVMwA")
-
-# ==============================
-# /gandalf
-# ==============================
-async def gandalf(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("👑👑👑👑")
-
-# ==============================
-# /esref
-# ==============================
-async def esref(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    await update.message.reply_text("👑👑👑👑")
-
-# ==============================
-# BOTU BAŞLAT
-# ==============================
+# BOT TOKEN ve handler ekleme
 if __name__ == "__main__":
-    BOT_TOKEN = os.environ.get("BOT_TOKEN")  # Railway ortam değişkeni
+    BOT_TOKEN = os.environ.get("BOT_TOKEN")
     if not BOT_TOKEN:
         raise RuntimeError("BOT_TOKEN environment variable bulunamadı!")
 
     app = ApplicationBuilder().token(BOT_TOKEN).build()
+    app.add_handler(CommandHandler("aracı", araci))
 
-    # /kasaXX komutlarını tek handler ile tüm SKY’lar için dinle
-    app.add_handler(MessageHandler(filters.Regex(r'^/kasa\d{2,}$'), kasa))
-
-    # Diğer komutlar
-    app.add_handler(CommandHandler("gunceladres", gunceladres))
-    app.add_handler(CommandHandler("gandalf", gandalf))
-    app.add_handler(CommandHandler("esref", esref))
-
-    print("Bot Railway üzerinde çalışıyor...")
+    print("Bot çalışıyor...")
     app.run_polling()
