@@ -101,11 +101,15 @@ async def fetch_user_amount(panel_config, user_uuid):
 
 # /araci komutu
 async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    aracilar_total = 0
+
     for grup, skylar in GRUPLAR.items():
         mesaj = f"📌 {grup} ({len(skylar)})\n"
         tasks = []
+        keys = []
         for s in skylar:
             key = s.replace(" ", "")
+            keys.append(key)
             if key not in USERS:
                 mesaj += f"{s} ❌ Kullanıcı bulunamadı\n"
                 continue
@@ -113,20 +117,30 @@ async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
             tasks.append(fetch_user_amount(PANELS[info["panel"]], info["uuid"]))
 
         results = await asyncio.gather(*tasks, return_exceptions=True)
+        grup_total = 0
 
-        for idx, s in enumerate(skylar):
-            key = s.replace(" ", "")
+        idx = 0
+        for key in keys:
             if key not in USERS:
                 continue
             total = results[idx] + float(DEVIRS.get(key, 0)) if not isinstance(results[idx], Exception) else 0
+            grup_total += total
             total_str = f"{int(total):,}".replace(",", ".") + " TL"
-            mesaj += f"{s} {total_str}\n"
+            mesaj += f"{key} {total_str}\n"
+            idx += 1
 
+        # 2’den fazla SKY varsa toplamı ekle
+        if len(skylar) > 1:
+            toplam_str = f"{int(grup_total):,}".replace(",", ".") + " TL"
+            mesaj += f"Toplam: {toplam_str}\n"
+
+        aracilar_total += grup_total
         await update.message.reply_text(mesaj)
         await asyncio.sleep(0.3)
 
-    # Son mesaj
-    await update.message.reply_text("SAYGILAR ABİ")
+    # Aracıların toplamı
+    aracilar_total_str = f"{int(aracilar_total):,}".replace(",", ".") + " TL"
+    await update.message.reply_text(f"Tüm aracıların toplamı: {aracilar_total_str}\nSAYGILAR ABİ")
 
 # BOT TOKEN ve handler ekleme
 if __name__ == "__main__":
