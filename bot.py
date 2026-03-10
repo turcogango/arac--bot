@@ -28,7 +28,7 @@ PANELS = {
     }
 }
 
-# GRUPLAR - TEK OLANLAR artık kendi grubunda
+# GRUPLAR - CAVİT’in eski SKY’ları çıkarıldı
 GRUPLAR = {
     "MALEFİZ": ["SKY02","SKY03","SKY06","SKY07","SKY11","SKY12","SKY13","SKY14","SKY16","SKY17",
                 "SKY21","SKY22","SKY23","SKY24","SKY25","SKY29","SKY30","SKY37","SKY46","SKY47",
@@ -41,7 +41,7 @@ GRUPLAR = {
     "KURTBEY": ["SKY32","SKY36"],
     "SARRAF": ["SKY28","SKY44"],
     "HEKİM": ["SKY55","SKY60"],
-    "CAVİT": ["SKY43","SKY08","SKY10"],
+    "CAVİT": ["SKY43"],  # sadece güncel SKY
     "FAST": ["SKY05"],
     "TOM SHELBY": ["SKY26"],
     "GOOGLE": ["SKY52"],
