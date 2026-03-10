@@ -7,7 +7,7 @@ import asyncio
 from telegram import Update
 from telegram.ext import ContextTypes, ApplicationBuilder, CommandHandler
 
-# USERS ve DEVRİ hazır
+# USERS ve DEVR
 with open("users.json", "r", encoding="utf-8") as f:
     USERS = json.load(f)
 
@@ -28,7 +28,7 @@ PANELS = {
     }
 }
 
-# GRUPLAR - CAVİT’in eski SKY’ları çıkarıldı
+# GRUPLAR
 GRUPLAR = {
     "MALEFİZ": ["SKY02","SKY03","SKY06","SKY07","SKY11","SKY12","SKY13","SKY14","SKY16","SKY17",
                 "SKY21","SKY22","SKY23","SKY24","SKY25","SKY29","SKY30","SKY37","SKY46","SKY47",
@@ -41,7 +41,7 @@ GRUPLAR = {
     "KURTBEY": ["SKY32","SKY36"],
     "SARRAF": ["SKY28","SKY44"],
     "HEKİM": ["SKY55","SKY60"],
-    "CAVİT": ["SKY43"],  # sadece güncel SKY
+    "CAVİT": ["SKY43"],
     "FAST": ["SKY05"],
     "TOM SHELBY": ["SKY26"],
     "GOOGLE": ["SKY52"],
@@ -103,22 +103,30 @@ async def fetch_user_amount(panel_config, user_uuid):
 async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
     for grup, skylar in GRUPLAR.items():
         mesaj = f"📌 {grup} ({len(skylar)})\n"
+        tasks = []
         for s in skylar:
             key = s.replace(" ", "")
             if key not in USERS:
-                mesaj += f" • {s} - ❌ Kullanıcı bulunamadı\n"
+                mesaj += f"{s} ❌ Kullanıcı bulunamadı\n"
                 continue
             info = USERS[key]
-            try:
-                net = await fetch_user_amount(PANELS[info["panel"]], info["uuid"])
-                devir = float(DEVIRS.get(key, 0))
-                total = net + devir
-                total_str = f"{int(total):,}".replace(",", ".") + " TL"
-                mesaj += f" • {s} - {total_str}\n"
-            except Exception as e:
-                mesaj += f" • {s} - ❌ Hata: {e}\n"
+            tasks.append(fetch_user_amount(PANELS[info["panel"]], info["uuid"]))
+
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+
+        for idx, s in enumerate(skylar):
+            key = s.replace(" ", "")
+            if key not in USERS:
+                continue
+            total = results[idx] + float(DEVIRS.get(key, 0)) if not isinstance(results[idx], Exception) else 0
+            total_str = f"{int(total):,}".replace(",", ".") + " TL"
+            mesaj += f"{s} {total_str}\n"
+
         await update.message.reply_text(mesaj)
-        await asyncio.sleep(0.5)  # Telegram flood önleme
+        await asyncio.sleep(0.3)
+
+    # Son mesaj
+    await update.message.reply_text("SAYGILAR ABİ")
 
 # BOT TOKEN ve handler ekleme
 if __name__ == "__main__":
