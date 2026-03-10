@@ -99,7 +99,7 @@ async def fetch_user_amount(panel_config, user_uuid):
         net = deposit_total - withdraw_total - delivery_total
         return net
 
-# /aracı komutu
+# /araci komutu
 async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
     for grup, skylar in GRUPLAR.items():
         mesaj = f"📌 {grup} ({len(skylar)})\n"
@@ -127,7 +127,7 @@ if __name__ == "__main__":
         raise RuntimeError("BOT_TOKEN environment variable bulunamadı!")
 
     app = ApplicationBuilder().token(BOT_TOKEN).build()
-    app.add_handler(CommandHandler("aracı", araci))
+    app.add_handler(CommandHandler("araci", araci))
 
     print("Bot çalışıyor...")
     app.run_polling()
