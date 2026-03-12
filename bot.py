@@ -34,7 +34,7 @@ GRUPLAR = {
                 "SKY21","SKY22","SKY23","SKY24","SKY25","SKY29","SKY30","SKY37","SKY46","SKY47",
                 "SKY48","SKY49","SKY58"],
     "RASPUTİN": ["SKY04","SKY20","SKY39","SKY42","SKY51","SKY53","SKY65","SKY66","SKY67","SKY69",
-                 "SKY70","SKY72","SKY73"],
+                 "SKY70","SKY72","SKY73","SKY77","SKY78"],
     "EFE": ["SKY09","SKY15","SKY19","SKY27","SKY31","SKY38","SKY50","SKY56","SKY57","SKY59","SKY61","SKY62"],
     "BOSSMAN": ["SKY08","SKY10","SKY40","SKY63","SKY64"],
     "ALFİE": ["SKY18","SKY33","SKY54"],
@@ -153,3 +153,4 @@ if __name__ == "__main__":
 
     print("Bot çalışıyor...")
     app.run_polling()
+
