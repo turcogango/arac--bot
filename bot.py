@@ -48,9 +48,10 @@ GRUPLAR = {
     "F BEY": ["SKY68"],
     "FAVELA": ["SKY74"],
     "DAYI": ["SKY75"],
+    "XAR": ["SKY79"],
     "KAPALI": ["SKY35","SKY41"],
     "BELİER": ["SKY45"],
-    "MEHMET": ["SKY71"]
+    "MEHMET": ["SKY71","SKY80"]
 }
 
 # Panelden veri çekme
