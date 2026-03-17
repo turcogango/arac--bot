@@ -47,7 +47,7 @@ GRUPLAR = {
     "GOOGLE": ["SKY52"],
     "F BEY": ["SKY68"],
     "FAVELA": ["SKY74"],
-    "DAYI": ["SKY75"],
+    "DAYI": ["SKY75","SKY76"],
     "XAR": ["SKY79"],
     "KAPALI": ["SKY35"],
     "BELİER": ["SKY45"],
