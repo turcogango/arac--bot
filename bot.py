@@ -46,9 +46,9 @@ GRUPLAR = {
     "GOOGLE": ["SKY52"],
     "F BEY": ["SKY68"],
     "FAVELA": ["SKY74"],
-    "DAYI": ["SKY75","SKY76","SKY83","SKY84"],
+    "DAYI": ["SKY75","SKY76","SKY83","SKY84","SKY86","SKY87"],
     "XAR": ["SKY79"],
-    "KAPALI": ["SKY35"],
+    "BOŞ": ["SKY35","SKY88","SKY89","SKY90"],
     "BELİER": ["SKY45"],
     "MEHMET": ["SKY71","SKY80","SKY82"]
 }
