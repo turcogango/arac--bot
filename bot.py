@@ -60,7 +60,7 @@ GRUPLAR = {
   "XAR": ["SKY79"],
   "MAXWEL": ["SKY85"],
 
-  "BOŞ": ["SKY90"]
+  "BOŞ": ["SKY08","SKY10","SKY40","SKY55","SKY60","SKY63","SKY64","SKY78","SKY90"]
 }
 
 # Panelden veri çekme
