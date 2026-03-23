@@ -30,27 +30,41 @@ PANELS = {
 
 # GRUPLAR
 GRUPLAR = {
-    "MALEFİZ": ["SKY02","SKY03","SKY06","SKY07","SKY12","SKY13","SKY14","SKY16","SKY17",
-                "SKY21","SKY22","SKY23","SKY24","SKY25","SKY29","SKY30","SKY37","SKY46","SKY47",
-                "SKY48","SKY49","SKY58"],
-    "RASPUTİN": ["SKY04","SKY20","SKY39","SKY42","SKY51","SKY53","SKY65","SKY66","SKY67","SKY69",
-                 "SKY70","SKY72","SKY73","SKY77","SKY36","SKY41","SKY11","SKY34"],
-    "EFE": ["SKY09","SKY15","SKY19","SKY27","SKY31","SKY38","SKY50","SKY56","SKY57","SKY59","SKY61","SKY62","SKY43"],
-    "BOSSMAN": ["SKY08","SKY10","SKY40","SKY63","SKY64","SKY78"],
-    "ALFİE": ["SKY18","SKY33","SKY54"],
-    "KURTBEY": ["SKY32"],
-    "SARRAF": ["SKY28","SKY44"],
-    "HEKİM": ["SKY55","SKY60"],
-    "FAST": ["SKY05"],
-    "TOM SHELBY": ["SKY26"],
-    "GOOGLE": ["SKY52"],
-    "F BEY": ["SKY68"],
-    "FAVELA": ["SKY74"],
-    "DAYI": ["SKY75","SKY76","SKY83","SKY84","SKY86","SKY87"],
-    "XAR": ["SKY79"],
-    "BOŞ": ["SKY35","SKY88","SKY89","SKY90"],
-    "BELİER": ["SKY45"],
-    "MEHMET": ["SKY71","SKY80","SKY82"]
+  "MALEFİZ": ["SKY02","SKY03","SKY06","SKY07","SKY12","SKY13","SKY14","SKY16","SKY17",
+              "SKY21","SKY22","SKY23","SKY24","SKY25","SKY29","SKY30","SKY37","SKY46",
+              "SKY47","SKY48","SKY49","SKY58"],
+
+  "RASPUTİN": ["SKY04","SKY11","SKY20","SKY34","SKY36","SKY39","SKY41","SKY42","SKY51",
+               "SKY65","SKY66","SKY67","SKY69","SKY70","SKY72","SKY73","SKY77"],
+
+  "EFE": ["SKY09","SKY15","SKY19","SKY27","SKY31","SKY38","SKY43","SKY50","SKY53",
+          "SKY56","SKY57","SKY59","SKY61","SKY62"],
+
+  "BOSSMAN": ["SKY08","SKY10","SKY40","SKY63","SKY64","SKY78"],
+
+  "DAYI": ["SKY75","SKY76","SKY83","SKY84","SKY86","SKY87"],
+
+  "MEHMET ELVERDİ": ["SKY71","SKY80","SKY81","SKY82","SKY89"],
+
+  "ALFİE": ["SKY18","SKY33","SKY54"],
+
+  "SARRAF": ["SKY28","SKY44"],
+
+  "CAVİT": ["SKY35","SKY88"],
+
+  "HEKİM": ["SKY55","SKY60"],
+
+  "FAST": ["SKY05"],
+  "KURT": ["SKY32"],
+  "TOM HARDY": ["SKY26"],
+  "BELİER": ["SKY45"],
+  "GOOGLE": ["SKY52"],
+  "KARTAL": ["SKY68"],
+  "FAVELA": ["SKY74"],
+  "XAR": ["SKY79"],
+  "MAXWEL": ["SKY85"],
+
+  "BOŞ": ["SKY90"]
 }
 
 # Panelden veri çekme
