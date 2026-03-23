@@ -40,8 +40,6 @@ GRUPLAR = {
   "EFE": ["SKY09","SKY15","SKY19","SKY27","SKY31","SKY38","SKY43","SKY50","SKY53",
           "SKY56","SKY57","SKY59","SKY61","SKY62"],
 
-  "BOSSMAN": ["SKY08","SKY10","SKY40","SKY63","SKY64","SKY78"],
-
   "DAYI": ["SKY75","SKY76","SKY83","SKY84","SKY86","SKY87"],
 
   "MEHMET ELVERDİ": ["SKY71","SKY80","SKY81","SKY82","SKY89"],
@@ -51,8 +49,6 @@ GRUPLAR = {
   "SARRAF": ["SKY28","SKY44"],
 
   "CAVİT": ["SKY35","SKY88"],
-
-  "HEKİM": ["SKY55","SKY60"],
 
   "FAST": ["SKY05"],
   "KURT": ["SKY32"],
