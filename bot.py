@@ -35,7 +35,7 @@ GRUPLAR = {
               "SKY47","SKY48","SKY49","SKY58"],
 
   "RASPUTİN": ["SKY04","SKY08","SKY11","SKY20","SKY34","SKY36","SKY39","SKY41","SKY42","SKY51",
-               "SKY65","SKY66","SKY67","SKY69","SKY70","SKY72","SKY73","SKY77"],
+               "SKY65","SKY66","SKY67","SKY69","SKY70","SKY72","SKY73","SKY32","SKY77"],
 
   "EFE": ["SKY09","SKY10","SKY15","SKY19","SKY27","SKY31","SKY38","SKY40","SKY43","SKY50","SKY53","SKY55",
           "SKY56","SKY57","SKY59","SKY61","SKY62"],
@@ -46,12 +46,11 @@ GRUPLAR = {
 
   "ALFİE": ["SKY18","SKY33","SKY54"],
 
-  "SARRAF": ["SKY28","SKY44"],
+  "SARRAF": ["SKY28","SKY44","SKY63"],
 
   "CAVİT": ["SKY35","SKY88"],
 
   "FAST": ["SKY05"],
-  "KURT": ["SKY32"],
   "TOM HARDY": ["SKY26"],
   "BELİER": ["SKY45"],
   "GOOGLE": ["SKY52"],
@@ -60,7 +59,7 @@ GRUPLAR = {
   "XAR": ["SKY79"],
   "MAXWEL": ["SKY85"],
 
-  "BOŞ": ["SKY60","SKY63","SKY64","SKY78","SKY90"]
+  "BOŞ": ["SKY60","SKY64","SKY78","SKY90"]
 }
 
 # Panelden veri çekme
