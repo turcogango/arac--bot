@@ -49,8 +49,6 @@ GRUPLAR = {
   "SARRAF": ["SKY28","SKY44","SKY63"],
 
   "CAVİT": ["SKY35","SKY88"],
-
-  "FAST": ["SKY05"],
   "TOM HARDY": ["SKY26"],
   "BELİER": ["SKY45"],
   "GOOGLE": ["SKY52"],
@@ -59,7 +57,7 @@ GRUPLAR = {
   "XAR": ["SKY79"],
   "MAXWEL": ["SKY85"],
 
-  "BOŞ": ["SKY60","SKY64","SKY78","SKY90"]
+  "BOŞ": ["SKY05","SKY60","SKY64","SKY78","SKY90"]
 }
 
 # Panelden veri çekme
