@@ -56,8 +56,11 @@ GRUPLAR = {
   "FAVELA": ["SKY74"],
   "XAR": ["SKY79"],
   "MAXWEL": ["SKY85"],
+  "GECEBEY": ["SKY05"],
+  "WALTERWHİTE": ["SKY60"],
 
-  "BOŞ": ["SKY05","SKY60","SKY64","SKY78","SKY90"]
+
+  "BOŞ": ["SKY64","SKY78","SKY90"]
 }
 
 # Panelden veri çekme
