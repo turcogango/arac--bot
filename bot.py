@@ -4,7 +4,7 @@ import aiohttp
 import json
 from datetime import datetime, timedelta
 import asyncio
-from telegram import Update
+from telegram import Update 
 from telegram.ext import ContextTypes, ApplicationBuilder, CommandHandler
 
 # USERS ve DEVR
@@ -95,7 +95,6 @@ async def create_panel_session(panel_config):
 
     return session, csrf
 
-
 # VERİ ÇEK
 async def fetch_amount(session, panel_url, csrf, user_uuid):
     today = (datetime.utcnow() + timedelta(hours=3)).strftime("%Y-%m-%d")
@@ -117,8 +116,7 @@ async def fetch_amount(session, panel_url, csrf, user_uuid):
     except:
         return 0
 
-
-# KOMUT
+# /araci KOMUTU
 async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
     panel_sessions = {}
     for name, panel in PANELS.items():
@@ -165,23 +163,49 @@ async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
         await update.message.reply_text(mesaj)
         await asyncio.sleep(0.2)
 
-    # session kapat
     for session, _ in panel_sessions.values():
         await session.close()
 
     genel = f"{int(aracilar_total):,}".replace(",", ".") + " TL"
     await update.message.reply_text(f"🔥 GENEL TOPLAM: {genel}\nSAYGILAR ABİ")
 
+# /devirguncel KOMUTU
+async def devirguncel(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    text = update.message.text
+    lines = text.split("\n")
+    updated = 0
 
-# BOT
+    for line in lines:
+        line = line.strip().replace(",", "").replace("  ", " ")
+        if not line.startswith("SKY"):
+            continue
+
+        try:
+            parts = line.split()
+            key = parts[0].upper() + (parts[1] if len(parts) > 1 else "")
+            if len(key) == 4:
+                key = "SKY0" + key[-1]
+
+            value = float(parts[-1])
+            DEVIRS[key] = int(round(value))
+            updated += 1
+        except:
+            continue
+
+    with open("devir.json", "w", encoding="utf-8") as f:
+        json.dump(DEVIRS, f, indent=2, ensure_ascii=False)
+
+    await update.message.reply_text(f"✅ {updated} SKY güncellendi")
+
+# BOT BAŞLATMA
 if __name__ == "__main__":
     BOT_TOKEN = os.environ.get("BOT_TOKEN")
-
     if not BOT_TOKEN:
         raise RuntimeError("BOT_TOKEN bulunamadı!")
 
     app = ApplicationBuilder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("araci", araci))
+    app.add_handler(CommandHandler("devirguncel", devirguncel))
 
     print("Bot çalışıyor...")
     app.run_polling()
