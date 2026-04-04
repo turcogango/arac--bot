@@ -30,32 +30,50 @@ PANELS = {
 
 # GRUPLAR
 GRUPLAR = {
-    "MALEFİZ": ["SKY02","SKY03","SKY06","SKY07","SKY12","SKY13","SKY14","SKY16","SKY17",
-                "SKY21","SKY22","SKY23","SKY24","SKY25","SKY29","SKY30","SKY37","SKY46",
-                "SKY47","SKY48","SKY49","SKY58"],
+      "MALEFİZ": ["SKY02","SKY03","SKY06","SKY07","SKY12","SKY13","SKY14","SKY16","SKY17",
+              "SKY21","SKY22","SKY23","SKY24","SKY25","SKY29","SKY30","SKY37","SKY46",
+              "SKY47","SKY48","SKY49","SKY58"],
 
-    "RASPUTİN": ["SKY04","SKY08","SKY11","SKY20","SKY34","SKY36","SKY39","SKY41","SKY42","SKY51",
-                 "SKY65","SKY66","SKY67","SKY69","SKY70","SKY72","SKY73","SKY32","SKY77"],
+  "RASPUTİN": ["SKY04","SKY08","SKY11","SKY20","SKY34","SKY36","SKY39","SKY41","SKY42","SKY51",
+               "SKY65","SKY66","SKY67","SKY69","SKY70","SKY72","SKY73","SKY32","SKY77","SKY57"],
 
-    "EFE": ["SKY10","SKY27","SKY31","SKY40","SKY43","SKY50","SKY53","SKY55","SKY59","SKY61","SKY62"],
+  "EFE": ["SKY10","SKY27","SKY31","SKY40","SKY43","SKY50","SKY53","SKY55","SKY59","SKY61","SKY62","SKY09"],
 
-    "DAYI": ["SKY75","SKY76","SKY83","SKY84","SKY86","SKY87"],
-    "MEHMET ELVERDİ": ["SKY71","SKY80","SKY81","SKY82","SKY89"],
-    "ALFİE": ["SKY18","SKY33","SKY54"],
-    "SARRAF": ["SKY28","SKY44","SKY63"],
-    "CAVİT": ["SKY35","SKY88"],
-    "TOM HARDY": ["SKY26"],
-    "BELİER": ["SKY45"],
-    "GOOGLE": ["SKY52"],
-    "KARTAL": ["SKY68"],
-    "FAVELA": ["SKY74"],
-    "XAR": ["SKY79"],
-    "MAXWEL": ["SKY85"],
-    "GECEBEY": ["SKY05"],
-    "WALTERWHİTE": ["SKY60"],
+  "DAYI": ["SKY75","SKY76","SKY83","SKY84","SKY86","SKY87"],
+
+  "MEHMET ELVERDİ": ["SKY71","SKY80","SKY81","SKY82","SKY89","SKY15"],
+
+  "ALFİE": ["SKY18","SKY33","SKY54"],
+
+  "SARRAF": ["SKY28","SKY44","SKY63"],
+
+  "CAVİT": ["SKY35","SKY88","SKY19"],
+
+  "TOM HARDY": ["SKY26"],
+
+  "BELİER": ["SKY45"],
+
+  "GOOGLE": ["SKY52"],
+
+  "KARTAL": ["SKY68"],
+
+  "FAVELA": ["SKY74"],
+
+  "XAR": ["SKY79"],
+
+  "MAXWEL": ["SKY85","SKY64"],
+
+  "GECEBEY": ["SKY05"],
+
+  "WALTERWHİTE": ["SKY60"],
+
+  "MEMATİ": ["SKY78","SKY90","SKY91"],
+
+  "CİCİ": ["SKY38","SKY56","SKY92"],
+
 
     # BOŞ ARTIK GÖRÜNÜYOR
-    "BOŞ": ["SKY64","SKY78","SKY90","SKY09","SKY15","SKY19","SKY38","SKY56","SKY57"]
+    "BOŞ": ["SKY0"]
 }
 
 # PANEL SESSION
