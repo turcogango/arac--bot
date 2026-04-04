@@ -5,7 +5,7 @@
   "SKY05": {"panel": "panel2", "uuid": "02bef311-cf41-4f95-b6c0-ba2f043757d2"},
   "SKY06": {"panel": "panel2", "uuid": "27d0cf5c-dbff-4e81-967e-308352a506c8"},
   "SKY07": {"panel": "panel2", "uuid": "79372884-c23a-430a-95b1-b1d2e753b367"},
-  "SKY08": {"panel": "panel1", "uuid": "7d173d1a-e258-4e96-8215-a0fe4f92b7f9"},
+  "SKY08": {"panel": "panel2", "uuid": "06a18dd0-5fa1-4f42-b968-7ebed93e7111"},
   "SKY09": {"panel": "panel2", "uuid": "f0a7568d-a5bb-4bc0-9179-0eebb9225fac"},
   "SKY10": {"panel": "panel2", "uuid": "da009959-f91e-4571-b123-c0b373ebacab"},
   "SKY11": {"panel": "panel2", "uuid": "db45b7f2-87e3-475b-ae9d-01b6963b10c8"},
@@ -14,7 +14,7 @@
   "SKY14": {"panel": "panel2", "uuid": "c35e3ab6-69d6-4eab-a3b6-75906d1c9ee6"},
   "SKY15": {"panel": "panel2", "uuid": "50ae9b77-bebf-466d-8707-968fbf4e4479"},
   "SKY16": {"panel": "panel2", "uuid": "3c8c1925-ba89-40f1-8fe7-8536684d1e77"},
-  "SKY17": {"panel": "panel1", "uuid": "db292c43-c433-485c-b603-9e1323e892ab"},
+  "SKY17": {"panel": "panel2", "uuid": "e187e408-d532-44a0-94ea-0203c3a8818e"},
   "SKY18": {"panel": "panel2", "uuid": "01561687-0586-46ca-9517-0632ca3d7866"},
   "SKY19": {"panel": "panel2", "uuid": "864b456d-ed4c-4bbe-ae66-85baf7311691"},
   "SKY20": {"panel": "panel2", "uuid": "5d325e05-ab32-4628-9e2e-5b97c62cf023"},
@@ -46,7 +46,7 @@
   "SKY46": {"panel": "panel2", "uuid": "25912608-32e0-4b63-a32e-2db0432c1d1d"},
   "SKY47": {"panel": "panel2", "uuid": "7f637dea-3015-48b5-966c-5b80430dc95a"},
   "SKY48": {"panel": "panel2", "uuid": "b6f1fbcb-e2c7-4f5a-991b-19decee90db3"},
-  "SKY49": {"panel": "panel1", "uuid": "92fb9297-a2f9-4203-af3c-db0bdd8aa1a9"},
+  "SKY49": {"panel": "panel2", "uuid": "b3861f9d-bc1e-46aa-8958-a10c9a6cc5e4"},
   "SKY50": {"panel": "panel2", "uuid": "4120e6d4-5f7b-491b-949d-c8ae346b16e8"},
   "SKY51": {"panel": "panel2", "uuid": "50f4afaa-f59c-4ef3-8f40-67f8a2f38318"},
   "SKY52": {"panel": "panel2", "uuid": "53fe3162-6581-41ed-b0df-2bda0d4802e0"},
@@ -60,8 +60,8 @@
   "SKY60": {"panel": "panel2", "uuid": "e22d0b42-c4df-4ac4-ae60-9ba73cf91745"},
   "SKY61": {"panel": "panel2", "uuid": "38b4371e-7102-4a14-97e0-6fea46918057"},
   "SKY62": {"panel": "panel2", "uuid": "bcfe2ada-620b-4900-9f5a-cd78f24ac436"},
-  "SKY63": {"panel": "panel1", "uuid": "732ab5c4-6a4c-4d93-923a-78f1763b0df3"},
-  "SKY64": {"panel": "panel1", "uuid": "b45bc465-cde9-4835-8cf4-82ab4d2555eb"},
+  "SKY63": {"panel": "panel2", "uuid": "3b36b55a-3b75-4198-96a6-fe8652d13820"},
+  "SKY64": {"panel": "panel2", "uuid": "411373a6-41e2-480f-9e9c-962722a915d8"},
   "SKY65": {"panel": "panel2", "uuid": "28fd0795-b73a-4f1e-88af-28ef6482af5f"},
   "SKY66": {"panel": "panel2", "uuid": "b6dae810-6e82-4639-801f-9ac667267b70"},
   "SKY67": {"panel": "panel2", "uuid": "1bbcc54f-26a7-4768-bfb9-b213322ad858"},
@@ -87,5 +87,8 @@
   "SKY87": {"panel": "panel2", "uuid": "9a2e5e15-222c-4c0d-b2c3-949f93becad0"},
   "SKY88": {"panel": "panel2", "uuid": "5c85bf8d-5147-4c2c-aa36-ac7d2b67fa24"},
   "SKY89": {"panel": "panel2", "uuid": "50713840-5f28-456f-b66e-066d33fcf3f8"},
-  "SKY90": {"panel": "panel2", "uuid": "da8c42ea-889d-43ee-b5a1-63ef62cfcf0b"}
+  "SKY90": {"panel": "panel2", "uuid": "da8c42ea-889d-43ee-b5a1-63ef62cfcf0b"},
+  "SKY91": {"panel": "panel2", "uuid": "06abcecb-57b6-43e1-9d6e-4ac6dc40cbf0"},
+  "SKY92": {"panel": "panel2", "uuid": "ecab3d22-daff-4453-a479-d42bf11973aa"}
+
 }
