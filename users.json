@@ -96,6 +96,8 @@
   "SKY96": {"panel": "panel2", "uuid": "c9d24fa0-ebc6-4362-b05b-bad7a590801e"},
   "SKY97": {"panel": "panel2", "uuid": "98255fb2-3106-4bd6-adb3-d8a0273f9f7b"},
   "SKY98": {"panel": "panel2", "uuid": "96cd56a8-1554-4b3a-a412-80bb14c9d99b"},
-  "SKY99": {"panel": "panel2", "uuid": "e0a29e71f-1f96-4b03-80e8-c1630e1a328b"}
+  "SKY99": {"panel": "panel2", "uuid": "e0a29e71f-1f96-4b03-80e8-c1630e1a328b"},
+  "SKY100": {"panel": "panel2", "uuid": "21b7c60a-5415-4a85-9867-7466a7d6d824"},
+  "SKY101": {"panel": "panel2", "uuid": "2840fdb9-a93f-4f60-b76f-633a6cf09b53"}
 
 }
