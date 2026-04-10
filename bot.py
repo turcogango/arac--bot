@@ -15,51 +15,70 @@ with open("devir.json", "r", encoding="utf-8") as f:
     DEVIRS = json.load(f)
 
 
-PANEL = {
-    "url": os.environ.get("PANEL2_URL"),
-    "username": os.environ.get("PANEL2_USER"),
-    "password": os.environ.get("PANEL2_PASS")
+PANELS = {
+    "panel1": {
+        "url": os.environ.get("PANEL1_URL"),
+        "username": os.environ.get("PANEL1_USER"),
+        "password": os.environ.get("PANEL1_PASS")
+    },
+    "panel2": {
+        "url": os.environ.get("PANEL2_URL"),
+        "username": os.environ.get("PANEL2_USER"),
+        "password": os.environ.get("PANEL2_PASS")
+    }
 }
 
 
-async def create_panel_session():
+async def create_panel_sessions():
+    sessions = {}
+
     ssl_ctx = ssl.create_default_context()
     ssl_ctx.check_hostname = False
     ssl_ctx.verify_mode = ssl.CERT_NONE
 
-    session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=20, ssl=ssl_ctx))
+    for name, panel in PANELS.items():
 
-    login_url = f"{PANEL['url']}/login"
-    reports_url = f"{PANEL['url']}/reports/quickly"
+        session = aiohttp.ClientSession(
+            connector=aiohttp.TCPConnector(limit=20, ssl=ssl_ctx)
+        )
 
-    async with session.get(login_url) as r:
-        text = await r.text()
+        login_url = f"{panel['url']}/login"
+        reports_url = f"{panel['url']}/reports/quickly"
 
-    token = ""
-    for line in text.splitlines():
-        if 'name="_token"' in line:
-            token = line.split('value="')[1].split('"')[0]
-            break
+        async with session.get(login_url) as r:
+            text = await r.text()
 
-    await session.post(login_url, data={
-        "_token": token,
-        "email": PANEL["username"],
-        "password": PANEL["password"]
-    })
+        token = ""
+        for line in text.splitlines():
+            if 'name="_token"' in line:
+                token = line.split('value="')[1].split('"')[0]
+                break
 
-    async with session.get(reports_url) as r:
-        text = await r.text()
+        await session.post(login_url, data={
+            "_token": token,
+            "email": panel["username"],
+            "password": panel["password"]
+        })
 
-    csrf = ""
-    for line in text.splitlines():
-        if 'csrf-token' in line:
-            csrf = line.split('content="')[1].split('"')[0]
-            break
+        async with session.get(reports_url) as r:
+            text = await r.text()
 
-    return session, csrf
+        csrf = ""
+        for line in text.splitlines():
+            if 'csrf-token' in line:
+                csrf = line.split('content="')[1].split('"')[0]
+                break
+
+        sessions[name] = {
+            "session": session,
+            "csrf": csrf
+        }
+
+    return sessions
 
 
 async def fetch_amount(session, panel_url, csrf, user_uuid):
+
     today = (datetime.utcnow() + timedelta(hours=3)).strftime("%Y-%m-%d")
 
     try:
@@ -90,7 +109,7 @@ async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     await update.message.reply_text("📊 Rapor hazırlanıyor...")
 
-    session, csrf = await create_panel_session()
+    panel_sessions = await create_panel_sessions()
 
     GRUPLAR = {
         "MALEFİZ": ["SKY02","SKY03","SKY06","SKY07","SKY12","SKY13","SKY14","SKY16","SKY17","SKY21","SKY22","SKY23","SKY24","SKY25","SKY29","SKY30","SKY37","SKY46","SKY47","SKY48","SKY49","SKY58","SKY96"],
@@ -122,7 +141,6 @@ async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
     for grup, skylar in GRUPLAR.items():
 
         mesaj = f"📌 {grup} ({len(skylar)})\n"
-
         grup_total = 0.0
 
         for s in skylar:
@@ -133,10 +151,14 @@ async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 continue
 
             info = USERS[key]
+            panel = info["panel"]
+
+            session = panel_sessions[panel]["session"]
+            csrf = panel_sessions[panel]["csrf"]
 
             result = await fetch_amount(
                 session,
-                PANEL["url"],
+                PANELS[panel]["url"],
                 csrf,
                 info["uuid"]
             )
@@ -158,7 +180,9 @@ async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         await asyncio.sleep(0.2)
 
-    await session.close()
+    # session cleanup
+    for p in panel_sessions.values():
+        await p["session"].close()
 
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
