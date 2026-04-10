@@ -117,7 +117,6 @@ async def fetch_amount(session, panel_url, csrf, user_uuid):
 
 # /araci komutu
 async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    # Tüm paneller için oturum oluştur
     panel_sessions = {}
     for name, panel in PANELS.items():
         panel_sessions[name] = await create_panel_session(panel)
@@ -139,7 +138,6 @@ async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
             keys.append(key)
             tasks.append(fetch_amount(session, PANELS[info["panel"]]["url"], csrf, info["uuid"]))
 
-        # Hataları sıfır olarak değerlendir
         results = await asyncio.gather(*tasks, return_exceptions=True)
         for i, result in enumerate(results):
             if isinstance(result, Exception):
@@ -152,18 +150,16 @@ async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
             grup_total += total
             mesaj += f"{key} {total:,.2f} ₺\n"
 
-        if len(keys) > 1:
-            mesaj += f"Toplam: {grup_total:,.2f} ₺\n"
+        # Her grup için toplam göster
+        mesaj += f"Toplam: {grup_total:,.2f} ₺\n"
 
         aracilar_total += grup_total
         await update.message.reply_text(mesaj)
         await asyncio.sleep(0.2)
 
-    # Tüm oturumları kapat
     for session, _ in panel_sessions.values():
         await session.close()
 
-    # Genel toplam
     await update.message.reply_text(f"🔥 GENEL TOPLAM: {aracilar_total:,.2f} ₺\nSAYGILAR ABİ")
 
 # Bot başlatma
