@@ -7,14 +7,12 @@ from datetime import datetime, timedelta
 from telegram import Update
 from telegram.ext import ContextTypes, ApplicationBuilder, CommandHandler
 
-# USERS ve DEVR dosyaları
 with open("users.json", "r", encoding="utf-8") as f:
     USERS = json.load(f)
 
 with open("devir.json", "r", encoding="utf-8") as f:
     DEVIRS = json.load(f)
 
-# PANELLER
 PANELS = {
     "panel1": {
         "url": os.environ.get("PANEL1_URL"),
@@ -28,7 +26,6 @@ PANELS = {
     }
 }
 
-# GRUPLAR - tam liste
 GRUPLAR = {
     "MALEFİZ": ["SKY02","SKY03","SKY06","SKY07","SKY12","SKY13","SKY14","SKY16","SKY17",
                 "SKY21","SKY22","SKY23","SKY24","SKY25","SKY29","SKY30","SKY37","SKY46",
@@ -58,13 +55,13 @@ GRUPLAR = {
     "BOŞ": ["SKY112","SKY113","SKY114","SKY115","SKY116","SKY117","SKY118","SKY119","SKY120"]
 }
 
-# Panel oturumu oluşturma
 async def create_panel_session(panel_config):
     ssl_ctx = ssl.create_default_context()
     ssl_ctx.check_hostname = False
     ssl_ctx.verify_mode = ssl.CERT_NONE
 
-    session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(ssl=ssl_ctx))
+    connector = aiohttp.TCPConnector(limit=20, ssl=ssl_ctx)
+    session = aiohttp.ClientSession(connector=connector)
 
     login_url = f"{panel_config['url']}/login"
     reports_url = f"{panel_config['url']}/reports/quickly"
@@ -95,7 +92,7 @@ async def create_panel_session(panel_config):
 
     return session, csrf
 
-# Kullanıcı miktarını çekme
+
 async def fetch_amount(session, panel_url, csrf, user_uuid):
     today = (datetime.utcnow() + timedelta(hours=3)).strftime("%Y-%m-%d")
     try:
@@ -108,65 +105,84 @@ async def fetch_amount(session, panel_url, csrf, user_uuid):
 
         deposit = float(data.get("deposit", [0])[0] or 0)
         withdraw = float(data.get("withdraw", [0])[0] or 0)
-        delivery_list = data.get("delivery", [0, 0])
-        delivery = float(delivery_list[1] if len(delivery_list) > 1 else 0)
+        delivery = float(data.get("delivery", [0, 0])[1] if len(data.get("delivery", [])) > 1 else 0)
 
         return deposit - withdraw - delivery
     except:
         return 0.0
 
-# /araci komutu
+
 async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
+
     panel_sessions = {}
     for name, panel in PANELS.items():
         panel_sessions[name] = await create_panel_session(panel)
 
-    aracilar_total = 0.0
+    total_all = 0.0
+
+    await update.message.reply_text("📊 Rapor hazırlanıyor...")
 
     for grup, skylar in GRUPLAR.items():
+
         mesaj = f"📌 {grup} ({len(skylar)})\n"
+
         tasks = []
         keys = []
 
+        if not skylar:
+            mesaj += "⚠️ Grup boş\n"
+            await update.message.reply_text(mesaj)
+            continue
+
         for s in skylar:
             key = s.strip().upper()
+
             if key not in USERS:
                 mesaj += f"{key} ❌ Kullanıcı yok\n"
                 continue
+
             info = USERS[key]
             session, csrf = panel_sessions[info["panel"]]
+
             keys.append(key)
             tasks.append(fetch_amount(session, PANELS[info["panel"]]["url"], csrf, info["uuid"]))
 
+        if not tasks:
+            mesaj += "⚠️ Geçerli kullanıcı yok\n"
+            await update.message.reply_text(mesaj)
+            continue
+
         results = await asyncio.gather(*tasks, return_exceptions=True)
-        for i, result in enumerate(results):
-            if isinstance(result, Exception):
-                results[i] = 0.0
 
         grup_total = 0.0
+
         for key, result in zip(keys, results):
+            if isinstance(result, Exception):
+                result = 0.0
+
             devir = float(DEVIRS.get(key, 0))
             total = result + devir
+
             grup_total += total
             mesaj += f"{key} {total:,.2f} ₺\n"
 
-        # Her grup için toplam göster
         mesaj += f"Toplam: {grup_total:,.2f} ₺\n"
 
-        aracilar_total += grup_total
+        total_all += grup_total
+
         await update.message.reply_text(mesaj)
         await asyncio.sleep(0.2)
 
     for session, _ in panel_sessions.values():
         await session.close()
 
-    await update.message.reply_text(f"🔥 GENEL TOPLAM: {aracilar_total:,.2f} ₺\nSAYGILAR ABİ")
+    await update.message.reply_text(
+        f"🔥 GENEL TOPLAM: {total_all:,.2f} ₺\nSAYGILAR ABİ"
+    )
 
-# Bot başlatma
+
 if __name__ == "__main__":
     BOT_TOKEN = os.environ.get("BOT_TOKEN")
-    if not BOT_TOKEN:
-        raise RuntimeError("BOT_TOKEN bulunamadı!")
 
     app = ApplicationBuilder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("araci", araci))
