@@ -5,7 +5,7 @@ import json
 import asyncio
 from datetime import datetime, timedelta
 from telegram import Update
-from telegram.ext import ContextTypes, ApplicationBuilder, CommandHandler
+from telegram.ext import ContextTypes
 
 
 with open("users.json", "r", encoding="utf-8") as f:
@@ -15,16 +15,22 @@ with open("devir.json", "r", encoding="utf-8") as f:
     DEVIRS = json.load(f)
 
 
-async def create_panel_session(panel_config):
+PANEL = {
+    "url": os.environ.get("PANEL2_URL"),
+    "username": os.environ.get("PANEL2_USER"),
+    "password": os.environ.get("PANEL2_PASS")
+}
+
+
+async def create_panel_session():
     ssl_ctx = ssl.create_default_context()
     ssl_ctx.check_hostname = False
     ssl_ctx.verify_mode = ssl.CERT_NONE
 
-    connector = aiohttp.TCPConnector(limit=20, ssl=ssl_ctx)
-    session = aiohttp.ClientSession(connector=connector)
+    session = aiohttp.ClientSession(connector=aiohttp.TCPConnector(limit=20, ssl=ssl_ctx))
 
-    login_url = f"{panel_config['url']}/login"
-    reports_url = f"{panel_config['url']}/reports/quickly"
+    login_url = f"{PANEL['url']}/login"
+    reports_url = f"{PANEL['url']}/reports/quickly"
 
     async with session.get(login_url) as r:
         text = await r.text()
@@ -37,8 +43,8 @@ async def create_panel_session(panel_config):
 
     await session.post(login_url, data={
         "_token": token,
-        "email": panel_config['username'],
-        "password": panel_config['password']
+        "email": PANEL["username"],
+        "password": PANEL["password"]
     })
 
     async with session.get(reports_url) as r:
@@ -82,66 +88,42 @@ async def fetch_amount(session, panel_url, csrf, user_uuid):
 
 async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
-    panel_sessions = {}
-    for name, panel in {
-        "panel1": {
-            "url": os.environ.get("PANEL1_URL"),
-            "username": os.environ.get("PANEL1_USER"),
-            "password": os.environ.get("PANEL1_PASS")
-        },
-        "panel2": {
-            "url": os.environ.get("PANEL2_URL"),
-            "username": os.environ.get("PANEL2_USER"),
-            "password": os.environ.get("PANEL2_PASS")
-        }
-    }.items():
-        panel_sessions[name] = await create_panel_session(panel)
+    await update.message.reply_text("📊 Rapor hazırlanıyor...")
+
+    session, csrf = await create_panel_session()
 
     GRUPLAR = {
-    "MALEFİZ": ["SKY02","SKY03","SKY06","SKY07","SKY12","SKY13","SKY14","SKY16","SKY17",
-                "SKY21","SKY22","SKY23","SKY24","SKY25","SKY29","SKY30","SKY37","SKY46",
-                "SKY47","SKY48","SKY49","SKY58","SKY96"],
-    "RASPUTİN": ["SKY04","SKY08","SKY11","SKY20","SKY34","SKY36","SKY39","SKY41","SKY42","SKY51",
-                 "SKY65","SKY66","SKY67","SKY69","SKY70","SKY72","SKY73","SKY32","SKY77","SKY57","SKY98"],
-    "EFE": ["SKY09","SKY10","SKY27","SKY31","SKY40","SKY43","SKY50","SKY53","SKY55","SKY59","SKY61",
-            "SKY62","SKY93","SKY94","SKY99","SKY100","SKY101","SKY103","SKY104","SKY105"],
-    "DAYI": ["SKY75","SKY76","SKY83","SKY84","SKY86","SKY87"],
-    "MEHMET ELVERDİ": ["SKY71","SKY80","SKY81","SKY82","SKY89","SKY15","SKY95"],
-    "ALFİE": ["SKY18","SKY33","SKY54"],
-    "SARRAF": ["SKY28","SKY44","SKY63"],
-    "CAVİT": ["SKY35","SKY88","SKY19"],
-    "TOM HARDY": ["SKY26"],
-    "BELİER": ["SKY45"],
-    "GOOGLE": ["SKY52"],
-    "KARTAL": ["SKY68"],
-    "FAVELA": ["SKY74"],
-    "XAR": ["SKY79"],
-    "MAXWEL": ["SKY85","SKY64"],
-    "GECEBEY": ["SKY05"],
-    "WALTERWHİTE": ["SKY60"],
-    "MEMATİ": ["SKY78","SKY90","SKY91"],
-    "METEHAN": ["SKY97"],
-    "CİCİ": ["SKY38","SKY56","SKY92"],
-    "CUMALİ": ["SKY106","SKY107","SKY108","SKY109","SKY110","SKY111"],
-    "BOŞ": ["SKY112","SKY113","SKY114","SKY115","SKY116","SKY117","SKY118","SKY119","SKY120"]
-}
-
-    special_groups = {
-        "MALEFİZ", "RASPUTİN", "EFE", "DAYI",
-        "MEHMET ELVERDİ", "CUMALİ", "BOŞ"
+        "MALEFİZ": ["SKY02","SKY03","SKY06","SKY07","SKY12","SKY13","SKY14","SKY16","SKY17","SKY21","SKY22","SKY23","SKY24","SKY25","SKY29","SKY30","SKY37","SKY46","SKY47","SKY48","SKY49","SKY58","SKY96"],
+        "RASPUTİN": ["SKY04","SKY08","SKY11","SKY20","SKY34","SKY36","SKY39","SKY41","SKY42","SKY51","SKY65","SKY66","SKY67","SKY69","SKY70","SKY72","SKY73","SKY32","SKY77","SKY57","SKY98"],
+        "EFE": ["SKY09","SKY10","SKY27","SKY31","SKY40","SKY43","SKY50","SKY53","SKY55","SKY59","SKY61","SKY62","SKY93","SKY94","SKY99","SKY100","SKY101","SKY103","SKY104","SKY105"],
+        "DAYI": ["SKY75","SKY76","SKY83","SKY84","SKY86","SKY87"],
+        "MEHMET ELVERDİ": ["SKY71","SKY80","SKY81","SKY82","SKY89","SKY15","SKY95"],
+        "ALFİE": ["SKY18","SKY33","SKY54"],
+        "SARRAF": ["SKY28","SKY44","SKY63"],
+        "CAVİT": ["SKY35","SKY88","SKY19"],
+        "TOM HARDY": ["SKY26"],
+        "BELİER": ["SKY45"],
+        "GOOGLE": ["SKY52"],
+        "KARTAL": ["SKY68"],
+        "FAVELA": ["SKY74"],
+        "XAR": ["SKY79"],
+        "MAXWEL": ["SKY85","SKY64"],
+        "GECEBEY": ["SKY05"],
+        "WALTERWHİTE": ["SKY60"],
+        "MEMATİ": ["SKY78","SKY90","SKY91"],
+        "METEHAN": ["SKY97"],
+        "CİCİ": ["SKY38","SKY56","SKY92"],
+        "CUMALİ": ["SKY106","SKY107","SKY108","SKY109","SKY110","SKY111"],
+        "BOŞ": ["SKY112","SKY113","SKY114","SKY115","SKY116","SKY117","SKY118","SKY119","SKY120"]
     }
 
     total_all = 0.0
-    merged_groups = []
-
-    await update.message.reply_text("📊 Rapor hazırlanıyor...")
 
     for grup, skylar in GRUPLAR.items():
 
         mesaj = f"📌 {grup} ({len(skylar)})\n"
 
-        tasks = []
-        keys = []
+        grup_total = 0.0
 
         for s in skylar:
             key = s.strip().upper()
@@ -151,25 +133,13 @@ async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
                 continue
 
             info = USERS[key]
-            session, csrf = panel_sessions[info["panel"]]
 
-            tasks.append(fetch_amount(
+            result = await fetch_amount(
                 session,
-                info["panel"],
+                PANEL["url"],
                 csrf,
                 info["uuid"]
-            ))
-            keys.append(key)
-
-        results = await asyncio.gather(*tasks, return_exceptions=True) if tasks else []
-
-        grup_total = 0.0
-
-        for i, key in enumerate(keys):
-            result = results[i]
-
-            if isinstance(result, Exception):
-                result = 0.0
+            )
 
             devir = float(DEVIRS.get(key, 0))
             total = result + devir
@@ -181,36 +151,16 @@ async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         total_all += grup_total
 
-        if grup in special_groups:
-            await context.bot.send_message(
-                chat_id=update.effective_chat.id,
-                text=mesaj
-            )
-        else:
-            merged_groups.append(mesaj)
+        await context.bot.send_message(
+            chat_id=update.effective_chat.id,
+            text=mesaj
+        )
 
         await asyncio.sleep(0.2)
 
-    if merged_groups:
-        await context.bot.send_message(
-            chat_id=update.effective_chat.id,
-            text="\n\n".join(merged_groups)
-        )
-
-    for session, _ in panel_sessions.values():
-        await session.close()
+    await session.close()
 
     await context.bot.send_message(
         chat_id=update.effective_chat.id,
         text=f"🔥 GENEL TOPLAM: {total_all:,.2f} ₺\nSAYGILAR ABİ"
     )
-
-
-if __name__ == "__main__":
-    BOT_TOKEN = os.environ.get("BOT_TOKEN")
-
-    app = ApplicationBuilder().token(BOT_TOKEN).build()
-    app.add_handler(CommandHandler("araci", araci))
-
-    print("Bot çalışıyor...")
-    app.run_polling()
