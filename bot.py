@@ -2,12 +2,12 @@ import os
 import ssl
 import aiohttp
 import json
-from datetime import datetime, timedelta
 import asyncio
-from telegram import Update 
+from datetime import datetime, timedelta
+from telegram import Update
 from telegram.ext import ContextTypes, ApplicationBuilder, CommandHandler
 
-# USERS ve DEVR
+# USERS ve DEVR dosyaları
 with open("users.json", "r", encoding="utf-8") as f:
     USERS = json.load(f)
 
@@ -28,42 +28,14 @@ PANELS = {
     }
 }
 
-# GRUPLAR
+# GRUPLAR (örnek)
 GRUPLAR = {
-      "MALEFİZ": ["SKY02","SKY03","SKY06","SKY07","SKY12","SKY13","SKY14","SKY16","SKY17",
-              "SKY21","SKY22","SKY23","SKY24","SKY25","SKY29","SKY30","SKY37","SKY46",
-              "SKY47","SKY48","SKY49","SKY58","SKY96"],
-
-  "RASPUTİN": ["SKY04","SKY08","SKY11","SKY20","SKY34","SKY36","SKY39","SKY41","SKY42","SKY51",
-               "SKY65","SKY66","SKY67","SKY69","SKY70","SKY72","SKY73","SKY32","SKY77","SKY57","SKY98"],
-
-  "EFE": ["SKY09","SKY10","SKY27","SKY31","SKY40","SKY43","SKY50","SKY53","SKY55","SKY59","SKY61",
-          "SKY62","SKY93","SKY94","SKY99","SKY100","SKY101","SKY103","SKY104","SKY105"],
-  "DAYI": ["SKY75","SKY76","SKY83","SKY84","SKY86","SKY87"],
-  "MEHMET ELVERDİ": ["SKY71","SKY80","SKY81","SKY82","SKY89","SKY15","SKY95"],
-  "ALFİE": ["SKY18","SKY33","SKY54"],
-  "SARRAF": ["SKY28","SKY44","SKY63"],
-  "CAVİT": ["SKY35","SKY88","SKY19"],
-  "TOM HARDY": ["SKY26"],
-  "BELİER": ["SKY45"],
-  "GOOGLE": ["SKY52"],
-  "KARTAL": ["SKY68"],
-  "FAVELA": ["SKY74"],
-  "XAR": ["SKY79"],
-  "MAXWEL": ["SKY85","SKY64"],
-  "GECEBEY": ["SKY05"],
-  "WALTERWHİTE": ["SKY60"],
-  "MEMATİ": ["SKY78","SKY90","SKY91"],
-  "METEHAN": ["SKY97"],
-  "CİCİ": ["SKY38","SKY56","SKY92"],
-    "CUMALİ": ["SKY106","SKY107","SKY108","SKY109","SKY110","SKY111"],
-
-
-    # BOŞ ARTIK GÖRÜNÜYOR
-    "BOŞ": ["SKY112","SKY113","SKY114","SKY115","SKY116","SKY117","SKY118","SKY119","SKY120"]
+    "MALEFİZ": ["SKY02","SKY03","SKY06"],
+    "RASPUTİN": ["SKY04","SKY08","SKY11"],
+    "EFE": ["SKY09","SKY10"]
 }
 
-# PANEL SESSION
+# Panel oturumu oluşturma
 async def create_panel_session(panel_config):
     ssl_ctx = ssl.create_default_context()
     ssl_ctx.check_hostname = False
@@ -100,10 +72,9 @@ async def create_panel_session(panel_config):
 
     return session, csrf
 
-# VERİ ÇEK
+# Kullanıcı miktarını çekme
 async def fetch_amount(session, panel_url, csrf, user_uuid):
     today = (datetime.utcnow() + timedelta(hours=3)).strftime("%Y-%m-%d")
-
     try:
         async with session.post(
             f"{panel_url}/reports/quickly",
@@ -114,95 +85,65 @@ async def fetch_amount(session, panel_url, csrf, user_uuid):
 
         deposit = float(data.get("deposit", [0])[0] or 0)
         withdraw = float(data.get("withdraw", [0])[0] or 0)
-        delivery = float(data.get("delivery", [0, 0])[1] or 0)
+        delivery_list = data.get("delivery", [0, 0])
+        delivery = float(delivery_list[1] if len(delivery_list) > 1 else 0)
 
         return deposit - withdraw - delivery
-
     except:
-        return 0
+        return 0.0
 
-# /araci KOMUTU
+# /araci komutu
 async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
+    # Tüm paneller için oturum oluştur
     panel_sessions = {}
     for name, panel in PANELS.items():
         panel_sessions[name] = await create_panel_session(panel)
 
-    aracilar_total = 0
+    aracilar_total = 0.0
 
     for grup, skylar in GRUPLAR.items():
         mesaj = f"📌 {grup} ({len(skylar)})\n"
-
         tasks = []
         keys = []
 
         for s in skylar:
             key = s.strip().upper()
-
             if key not in USERS:
                 mesaj += f"{key} ❌ Kullanıcı yok\n"
                 continue
-
             info = USERS[key]
             session, csrf = panel_sessions[info["panel"]]
-
             keys.append(key)
             tasks.append(fetch_amount(session, PANELS[info["panel"]]["url"], csrf, info["uuid"]))
 
-        results = await asyncio.gather(*tasks)
+        # Hataları sıfır olarak değerlendir
+        results = await asyncio.gather(*tasks, return_exceptions=True)
+        for i, result in enumerate(results):
+            if isinstance(result, Exception):
+                results[i] = 0.0
 
-        grup_total = 0
-
+        grup_total = 0.0
         for key, result in zip(keys, results):
-            total = result + float(DEVIRS.get(key, 0))
+            devir = float(DEVIRS.get(key, 0))
+            total = result + devir
             grup_total += total
-
-            total_str = f"{int(total):,}".replace(",", ".") + " TL"
-            mesaj += f"{key} {total_str}\n"
+            mesaj += f"{key} {total:,.2f} ₺\n"
 
         if len(keys) > 1:
-            toplam_str = f"{int(grup_total):,}".replace(",", ".") + " TL"
-            mesaj += f"Toplam: {toplam_str}\n"
+            mesaj += f"Toplam: {grup_total:,.2f} ₺\n"
 
         aracilar_total += grup_total
-
         await update.message.reply_text(mesaj)
         await asyncio.sleep(0.2)
 
+    # Tüm oturumları kapat
     for session, _ in panel_sessions.values():
         await session.close()
 
-    genel = f"{int(aracilar_total):,}".replace(",", ".") + " TL"
-    await update.message.reply_text(f"🔥 GENEL TOPLAM: {genel}\nSAYGILAR ABİ")
+    # Genel toplam
+    await update.message.reply_text(f"🔥 GENEL TOPLAM: {aracilar_total:,.2f} ₺\nSAYGILAR ABİ")
 
-# /devirguncel KOMUTU
-async def devirguncel(update: Update, context: ContextTypes.DEFAULT_TYPE):
-    text = update.message.text
-    lines = text.split("\n")
-    updated = 0
-
-    for line in lines:
-        line = line.strip().replace(",", "").replace("  ", " ")
-        if not line.startswith("SKY"):
-            continue
-
-        try:
-            parts = line.split()
-            key = parts[0].upper() + (parts[1] if len(parts) > 1 else "")
-            if len(key) == 4:
-                key = "SKY0" + key[-1]
-
-            value = float(parts[-1])
-            DEVIRS[key] = int(round(value))
-            updated += 1
-        except:
-            continue
-
-    with open("devir.json", "w", encoding="utf-8") as f:
-        json.dump(DEVIRS, f, indent=2, ensure_ascii=False)
-
-    await update.message.reply_text(f"✅ {updated} SKY güncellendi")
-
-# BOT BAŞLATMA
+# Bot başlatma
 if __name__ == "__main__":
     BOT_TOKEN = os.environ.get("BOT_TOKEN")
     if not BOT_TOKEN:
@@ -210,7 +151,6 @@ if __name__ == "__main__":
 
     app = ApplicationBuilder().token(BOT_TOKEN).build()
     app.add_handler(CommandHandler("araci", araci))
-    app.add_handler(CommandHandler("devirguncel", devirguncel))
 
     print("Bot çalışıyor...")
     app.run_polling()
