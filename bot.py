@@ -28,11 +28,34 @@ PANELS = {
     }
 }
 
-# GRUPLAR (örnek)
+# GRUPLAR - tam liste
 GRUPLAR = {
-    "MALEFİZ": ["SKY02","SKY03","SKY06"],
-    "RASPUTİN": ["SKY04","SKY08","SKY11"],
-    "EFE": ["SKY09","SKY10"]
+    "MALEFİZ": ["SKY02","SKY03","SKY06","SKY07","SKY12","SKY13","SKY14","SKY16","SKY17",
+                "SKY21","SKY22","SKY23","SKY24","SKY25","SKY29","SKY30","SKY37","SKY46",
+                "SKY47","SKY48","SKY49","SKY58","SKY96"],
+    "RASPUTİN": ["SKY04","SKY08","SKY11","SKY20","SKY34","SKY36","SKY39","SKY41","SKY42","SKY51",
+                 "SKY65","SKY66","SKY67","SKY69","SKY70","SKY72","SKY73","SKY32","SKY77","SKY57","SKY98"],
+    "EFE": ["SKY09","SKY10","SKY27","SKY31","SKY40","SKY43","SKY50","SKY53","SKY55","SKY59","SKY61",
+            "SKY62","SKY93","SKY94","SKY99","SKY100","SKY101","SKY103","SKY104","SKY105"],
+    "DAYI": ["SKY75","SKY76","SKY83","SKY84","SKY86","SKY87"],
+    "MEHMET ELVERDİ": ["SKY71","SKY80","SKY81","SKY82","SKY89","SKY15","SKY95"],
+    "ALFİE": ["SKY18","SKY33","SKY54"],
+    "SARRAF": ["SKY28","SKY44","SKY63"],
+    "CAVİT": ["SKY35","SKY88","SKY19"],
+    "TOM HARDY": ["SKY26"],
+    "BELİER": ["SKY45"],
+    "GOOGLE": ["SKY52"],
+    "KARTAL": ["SKY68"],
+    "FAVELA": ["SKY74"],
+    "XAR": ["SKY79"],
+    "MAXWEL": ["SKY85","SKY64"],
+    "GECEBEY": ["SKY05"],
+    "WALTERWHİTE": ["SKY60"],
+    "MEMATİ": ["SKY78","SKY90","SKY91"],
+    "METEHAN": ["SKY97"],
+    "CİCİ": ["SKY38","SKY56","SKY92"],
+    "CUMALİ": ["SKY106","SKY107","SKY108","SKY109","SKY110","SKY111"],
+    "BOŞ": ["SKY112","SKY113","SKY114","SKY115","SKY116","SKY117","SKY118","SKY119","SKY120"]
 }
 
 # Panel oturumu oluşturma
