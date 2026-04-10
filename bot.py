@@ -118,9 +118,20 @@ async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
     for name, panel in PANELS.items():
         panel_sessions[name] = await create_panel_session(panel)
 
+    await update.message.reply_text("📊 Rapor hazırlanıyor...")
+
     total_all = 0.0
 
-    await update.message.reply_text("📊 Rapor hazırlanıyor...")
+    BIRLESIK_GRUPLAR = {
+        "CİCİ", "METEHAN", "MEMATİ", "WALTERWHİTE",
+        "GECEBEY", "MAXWEL", "XAR", "FAVELA",
+        "KARTAL", "GOOGLE", "BELİER", "TOM HARDY",
+        "CAVİT", "SARRAF", "ALFİE"
+    }
+
+    birlesik_text = "📌 SEÇİLİ GRUPLAR RAPORU\n\n"
+    birlesik_total = 0.0
+    birlesik_var = False
 
     for grup, skylar in GRUPLAR.items():
 
@@ -130,8 +141,7 @@ async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
         keys = []
 
         if not skylar:
-            mesaj += "⚠️ Grup boş\n"
-            await update.message.reply_text(mesaj)
+            await update.message.reply_text(mesaj + "⚠️ Grup boş")
             continue
 
         for s in skylar:
@@ -145,11 +155,17 @@ async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
             session, csrf = panel_sessions[info["panel"]]
 
             keys.append(key)
-            tasks.append(fetch_amount(session, PANELS[info["panel"]]["url"], csrf, info["uuid"]))
+            tasks.append(
+                fetch_amount(
+                    session,
+                    PANELS[info["panel"]]["url"],
+                    csrf,
+                    info["uuid"]
+                )
+            )
 
         if not tasks:
-            mesaj += "⚠️ Geçerli kullanıcı yok\n"
-            await update.message.reply_text(mesaj)
+            await update.message.reply_text(mesaj + "⚠️ Geçerli kullanıcı yok")
             continue
 
         results = await asyncio.gather(*tasks, return_exceptions=True)
@@ -170,8 +186,19 @@ async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         total_all += grup_total
 
-        await update.message.reply_text(mesaj)
+        # 🔥 BİRLEŞTİRME KONTROLÜ
+        if grup in BIRLESIK_GRUPLAR:
+            birlesik_var = True
+            birlesik_text += mesaj + "\n"
+            birlesik_total += grup_total
+        else:
+            await update.message.reply_text(mesaj)
+
         await asyncio.sleep(0.2)
+
+    if birlesik_var:
+        birlesik_text += f"🔥 TOPLAM: {birlesik_total:,.2f} ₺"
+        await update.message.reply_text(birlesik_text)
 
     for session, _ in panel_sessions.values():
         await session.close()
