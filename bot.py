@@ -52,7 +52,7 @@ GRUPLAR = {
     "METEHAN": ["SKY97"],
     "CİCİ": ["SKY38","SKY56","SKY92"],
     "CUMALİ": ["SKY106","SKY107","SKY108","SKY109","SKY110","SKY111"],
-    "BOŞ": ["SKY112","SKY113","SKY114","SKY115","SKY116","SKY117","SKY118","SKY119","SKY120"]
+    "BOŞ": ["SKY113","SKY114","SKY115","SKY116","SKY117","SKY118","SKY119","SKY120"]
 }
 
 async def create_panel_session(panel_config):
