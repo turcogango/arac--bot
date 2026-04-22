@@ -45,7 +45,7 @@ GRUPLAR = {
     "FAST": ["SKY19","SKY123"],
     "GOOGLE": ["SKY52"],
     "KARTAL": ["SKY68"],
-    "FAVELA": ["SKY74"],
+    "FAVELA": ["SKY74","SKY134"],
     "EŞREFTEKTÜK": ["SKY133"],
     "XAR": ["SKY79","SKY113","SKY120","SKY64","SKY124"],
     "MAXWEL": ["SKY85"],
@@ -54,10 +54,9 @@ GRUPLAR = {
     "MEMATİ": ["SKY78","SKY90"],
     "METEHAN": ["SKY97"],
     "CİCİ": ["SKY38","SKY56","SKY92"],
-    "FRED": ["SKY106","SKY107","SKY108","SKY109","SKY110","SKY111","SKY115","SKY116","SKY117"],
-    "BOŞ": ["SKY134","SKY135"]
+    "FRED": ["SKY106","SKY107","SKY108","SKY109","SKY110","SKY111","SKY115","SKY116","SKY117","SKY135],
+    "BOŞ": ["SKY136"]
 }
-
 async def create_panel_session(panel_config):
     ssl_ctx = ssl.create_default_context()
     ssl_ctx.check_hostname = False
