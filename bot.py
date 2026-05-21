@@ -24,12 +24,10 @@ PANELS = {
         "username": os.environ.get("PANEL2_USER"),
         "password": os.environ.get("PANEL2_PASS")
     }
-}
+
 
 GRUPLAR = {
-    "MALEFİZ": ["SKY02","SKY03","SKY06","SKY07","SKY12","SKY13","SKY14","SKY16","SKY17",
-                "SKY21","SKY22","SKY23","SKY24","SKY25","SKY29","SKY30","SKY37","SKY46",
-                "SKY47","SKY48","SKY49","SKY58","SKY96"],
+    "MALEFİZ": ["SKY06","SKY14","SKY16","SKY17"],
     "RASPUTİN": ["SKY04","SKY08","SKY11","SKY20","SKY26","SKY34","SKY36","SKY39","SKY41","SKY42","SKY51",
                  "SKY65","SKY66","SKY67","SKY69","SKY70","SKY72","SKY73","SKY32","SKY77","SKY119","SKY121","SKY122","SKY125","SKY126","SKY130"],
     "EFE": ["SKY09","SKY10","SKY27","SKY31","SKY40","SKY43","SKY50","SKY53","SKY55","SKY59","SKY61",
@@ -51,7 +49,8 @@ GRUPLAR = {
     "GARGAMEL": ["SKY138"],
     "CİCİ": ["SKY35","SKY38","SKY56","SKY90","SKY92","SKY127","SKY114"],
     "FRED": ["SKY57","SKY64","SKY106","SKY107","SKY108","SKY109","SKY110","SKY111","SKY115","SKY116","SKY117","SKY135","SKY136","SKY60","SKY140","SKY91"],
-    "BOŞ": ["SKY45","SKY85","SKY98","SKY129"]
+    "BOŞ": ["SKY02","SKY03","SKY07","SKY12","SKY13","SKY21","SKY22","SKY23","SKY24","SKY25","SKY29","SKY30","SKY37","SKY46",
+                "SKY47","SKY48","SKY49","SKY58","SKY96","SKY45","SKY85","SKY98","SKY129"]
 }
 
 async def create_panel_session(panel_config):
