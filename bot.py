@@ -24,23 +24,19 @@ PANELS = {
         "username": os.environ.get("PANEL2_USER"),
         "password": os.environ.get("PANEL2_PASS")
     }
-
-    
-    }
-
-
+}
 
 GRUPLAR = {
     "MALEFİZ": ["SKY06","SKY14","SKY16","SKY17"],
 
-    "RASPUTİN": [ "SKY04","SKY08","SKY11","SKY20","SKY26","SKY34","SKY41",
-                  "SKY65","SKY70","SKY72","SKY119","SKY122","SKY125",
-                  "SKY126","SKY130","SKY67","SKY66","SKY69","SKY27",
-                   "SKY25","SKY23","SKY22","SKY19","SKY71"  ],
+    "RASPUTİN": ["SKY04","SKY08","SKY11","SKY20","SKY26","SKY34","SKY41",
+                 "SKY65","SKY70","SKY72","SKY119","SKY122","SKY125",
+                 "SKY126","SKY130","SKY67","SKY66","SKY69","SKY27",
+                 "SKY25","SKY23","SKY22","SKY19","SKY71"],
 
     "EFE": ["SKY09","SKY10","SKY31","SKY43","SKY50","SKY61","SKY62",
-             "SKY48","SKY53","SKY51","SKY49","SKY47","SKY46",
-             "SKY36","SKY15","SKY13","SKY55" ],
+            "SKY48","SKY53","SKY51","SKY49","SKY47","SKY46",
+            "SKY36","SKY15","SKY13","SKY55"],
 
     "DAYI": ["SKY76","SKY83","SKY86"],
 
@@ -128,17 +124,6 @@ async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
     total_all = 0.0
 
-    BIRLESIK_GRUPLAR = {
-        "CİCİ", "METEHAN", "MEMATİ", "WALTERWHİTE",
-        "GECEBEY", "MAXWEL", "XAR", "FAVELA",
-        "KARTAL", "GOOGLE", "BELİER", "TOM HARDY",
-        "CAVİT", "SARRAF", "ALFİE"
-    }
-
-    birlesik_text = "📌 SEÇİLİ GRUPLAR RAPORU\n\n"
-    birlesik_total = 0.0
-    birlesik_var = False
-
     for grup, skylar in GRUPLAR.items():
 
         mesaj = f"📌 {grup} ({len(skylar)})\n"
@@ -192,19 +177,10 @@ async def araci(update: Update, context: ContextTypes.DEFAULT_TYPE):
 
         total_all += grup_total
 
-        # 🔥 BİRLEŞTİRME KONTROLÜ
-        if grup in BIRLESIK_GRUPLAR:
-            birlesik_var = True
-            birlesik_text += mesaj + "\n"
-            birlesik_total += grup_total
-        else:
-            await update.message.reply_text(mesaj)
+        # HER GRUP AYRI MESAJ
+        await update.message.reply_text(mesaj)
 
         await asyncio.sleep(0.2)
-
-    if birlesik_var:
-        birlesik_text += f"🔥 TOPLAM: {birlesik_total:,.2f} ₺"
-        await update.message.reply_text(birlesik_text)
 
     for session, _ in panel_sessions.values():
         await session.close()
