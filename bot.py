@@ -59,7 +59,7 @@ GRUPLAR = {
         "SKY41","SKY65","SKY70"
     ],
 
-    "CİCİ": ["SKY63","SKY58","SKY21","SKY32"]
+    "CİCİ": ["SKY63","SKY58","SKY21","SKY32","SKY35","SKY38","SKY56"]
 }
 
 async def create_panel_session(panel_config):
