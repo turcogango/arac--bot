@@ -33,12 +33,14 @@ PANELS = {
 GRUPLAR = {
     "MALEFİZ": ["SKY06","SKY14","SKY16","SKY17"],
 
-    "RASPUTİN": ["SKY04","SKY08","SKY11","SKY20","SKY26","SKY34","SKY41",
-        "SKY65","SKY70","SKY72","SKY119","SKY122","SKY125","SKY126","SKY130"],
+    "RASPUTİN": [ "SKY04","SKY08","SKY11","SKY20","SKY26","SKY34","SKY41",
+                  "SKY65","SKY70","SKY72","SKY119","SKY122","SKY125",
+                  "SKY126","SKY130","SKY67","SKY66","SKY69","SKY27",
+                   "SKY25","SKY23","SKY22","SKY19","SKY71"  ],
 
     "EFE": ["SKY09","SKY10","SKY31","SKY43","SKY50","SKY61","SKY62",
-        "SKY93","SKY99","SKY100","SKY101","SKY103","SKY104",
-        "SKY105","SKY112","SKY131","SKY132"  ],
+             "SKY48","SKY53","SKY51","SKY49","SKY47","SKY46",
+             "SKY36","SKY15","SKY13","SKY55" ],
 
     "DAYI": ["SKY76","SKY83","SKY86"],
 
@@ -50,14 +52,13 @@ GRUPLAR = {
 
     "GECEBEY": ["SKY05"],
 
-    "GARGAMEL": ["SKY138"],
+    "GARGAMEL": ["SKY03"],
 
-    "CİCİ": [ "SKY35","SKY38","SKY56",
-        "SKY90","SKY92","SKY127","SKY114"],
+    "CİCİ": ["SKY63","SKY58","SKY21","SKY32"],
 
-    "FRED": [ "SKY57","SKY64","SKY106","SKY107","SKY108","SKY109",
-        "SKY110","SKY111","SKY115","SKY116","SKY117","SKY124",
-        "SKY135","SKY136","SKY60","SKY140","SKY91"]
+    "FRED": ["SKY45","SKY44","SKY42","SKY40","SKY39","SKY37",
+             "SKY30","SKY29","SKY28","SKY24","SKY12","SKY07",
+             "SKY02","SKY59","SKY57","SKY64","SKY60"]
 }
 
 async def create_panel_session(panel_config):
